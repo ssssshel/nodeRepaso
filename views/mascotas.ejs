@@ -1,0 +1,29 @@
+<%- include("templates/header", {tituloWeb: 'Página de mascotas'}) %>
+<body>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>DESCRIPCION</th>
+                    <th>ACCIÓN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (arrayMascotas.length > 0) { %>
+                    <% arrayMascotas.forEach(mascota => { %>
+                        <tr>
+                            <th><%= mascota.id %> </th>
+                            <td><%= mascota.nombre %> </td>
+                            <td><%= mascota.descripcion %> </td>
+                            <td>dsfa</td>
+                        </tr>
+                    <% }) %>
+                <% } %>
+            </tbody>
+        </table>
+        
+    </div>
+</body>
+</html>

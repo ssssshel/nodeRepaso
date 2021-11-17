@@ -12,23 +12,9 @@ app.set('views', __dirname + '/views');
 // PERMITE QUE EXPRESS PUEDA DEFINIR UNA CARPETA CON PÁGINAS ESTÁTICAS COMO PÚBLICA
 app.use(express.static(__dirname + "/public"));
 
-
-
-
-// SEND ES PARA TEXTO
-// app.get('/', (req, res) => {
-//     res.send('Mi respuesta desde express v2');
-// })
-
-// RENDER PARA PLANTILLAS
-app.get('/', (req, res) =>{
-    res.render("index", {titulo : "mi titulo dinámico"});
-})
-
-// página de servicios ej
-app.get('/servicios', (req, res) => {
-    res.render("servicios", {tituloServicios : "Esto es un título de servicios"});
-})
+//RUTAS WEB
+app.use('/', require('./router/appWeb'));
+app.use('/mascotas', require('./router/mascotas'));
 
 // Página no encontrada
 app.use((req, res, next) =>{

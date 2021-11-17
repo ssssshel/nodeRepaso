@@ -86,6 +86,8 @@ const app = express();
    }
    Dependiendo del estado de la repuesta podemos programar una respuesta u otra
 
+CUANDO SE USA "USE" ES UN MIDDLEWARE
+
 ********************************************************
 
 ## 7. TEMPLATE ENGINES
@@ -103,6 +105,7 @@ app.set('view engine', 'ejs');
 * PUBLIC: Almacena contenido visile para el cliente. EJ: CSS, HTML, imagenes, etc.
 * VIEWS: Contiene EJS y similares que son renderizados por express para luego exportarlas a public.
   * Templates: Guarda plantillas (header, footer, etc).
+* ROUTER:
 
 ********************************************************
 
@@ -119,5 +122,19 @@ res.render("archivo",{elemento:"contenido"}); => EMBEBER A HTML
   * <%- include("/rutaArchivo", {elemento:"contenido"})%>
 
 *********************************************************
+
+## 10. EJECUTAR SCRIPT DE PACKAGE.JSON
+
+npm run nombreScript
+
+*********************************************************
+
+## 11. ROUTER
+
+Router es una funcionalidad de express que permite ordenar las rutas de los servicios 
+que implementamos en el desarrollo.
+
+const express = require('express');
+const router = express.Router();
 
 
