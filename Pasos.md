@@ -105,7 +105,10 @@ app.set('view engine', 'ejs');
 * PUBLIC: Almacena contenido visile para el cliente. EJ: CSS, HTML, imagenes, etc.
 * VIEWS: Contiene EJS y similares que son renderizados por express para luego exportarlas a public.
   * Templates: Guarda plantillas (header, footer, etc).
-* ROUTER:
+* ROUTER: Contiene servicios modularizados que se conectan al app
+* MODELS: Guarda los modelos o plantillas que se producen con Schema, estos modelos incluyen los objetos que
+  posteriormente seran documentos dentro de las colecciones de las BD.
+
 
 ********************************************************
 
@@ -131,10 +134,58 @@ npm run nombreScript
 
 ## 11. ROUTER
 
-Router es una funcionalidad de express que permite ordenar las rutas de los servicios 
+Router es una funcionalidad de express que permite ordenar mediante modulos las rutas de los servicios 
 que implementamos en el desarrollo.
 
 const express = require('express');
 const router = express.Router();
 
+* Para exportar
+    module.exports = nombredeCarpeta;
+
+* Para importar
+    app.use('/rutaaAsignar', require('./rutaDocumento'));
+
+**********************************************************
+
+## 12. MONGOOSE
+
+Es una funcionalidad de express que provee a node de las herramientas necesarias para poder trabajar con
+MongoDB de manera sencilla.
+
+npm i mongoose
+
+* Configurar MongoDB
+* const mongoose = require('mongoose');
+* CREDENCIALES DE MONGODB
+    const user = '', password y dbname;
+
+* INTERPOLACIÓN DE CREDENCIALES A LA URI
+    const uri = `uri en comillas invertidas://${user}, etc `
+
+* CONEXION Y VERIFICACION DE CONEXION SATISFACTORIA
+   mongoose.connect(uri,
+        {useNewUriParser: true, useUnifiedTopology: true}
+   )
+        .then(() => console.log('Base de datos conectada'))
+        .catch(e => console.log(e));
+
+## 13. SCHEMA
+
+Con el fin de automatizar la tarea de registrar documentos en las colecciones de una DB ´pdemos usar Scheme, 
+una funcionalidad de Mongoose que nos permite crear plantillas de nuestros documentos.
+
+const mongoose = require('mongoose);
+const Schema = mongoose.Schema();
+
+const nombreSchema = new Schema(){
+    variable: valor,
+    variable2: valor2,
+}
+
+* SE CREA EL MODELO
+  
+  const nombreDocumento = mongoose.model('nombreDocumento', nombreSchema);
+
+module.exports = nombreDocumento;
 
