@@ -170,6 +170,8 @@ npm i mongoose
         .then(() => console.log('Base de datos conectada'))
         .catch(e => console.log(e));
 
+***********************************************************
+
 ## 13. SCHEMA
 
 Con el fin de automatizar la tarea de registrar documentos en las colecciones de una DB ´pdemos usar Scheme, 
@@ -189,3 +191,187 @@ const nombreSchema = new Schema(){
 
 module.exports = nombreDocumento;
 
+***************************************************
+
+## 14. VARIABLES DE ENTORNO (DOTENV)
+
+Debemos ocultar ciertas variables que pueden contener información privada como credenciales o ontraseñas,
+para ello utilizamos las variables de entorno en colaboración al .gitignore.
+
+* Se instala el módulo dotenv => npm i dotenv
+
+* Creamos un arhcivo .env donde guardaremos las VE con el siguiente formato:
+    NOMBREVAR = valor,
+
+
+*************************************************************
+
+## 15. CRUD
+
+Create, read, update y delete. Los 4 funtamentos de todo servicio dinámico.
+
+### 15.1 CREAR DOCUMENTOS
+
+Necesitaremos del módulo "body parser"
+
+* npm i body-parser
+
+* ADAPTAMOS LOS FORMULARIOS
+  <form action="/habitualmenteSeUsaLaRamaPadre" method="verboHTTP">
+  <input name="elemento del documento a representar, guiarse del Schema">
+
+* PARA AGREGAR DOCUMENTOS:
+  
+  router.post('/', async(req, res) => {
+      const body = req.body  //el request del contenido del body se hace variable
+
+      try{
+          await nombreSchema.create(body)  //se espera a que la platilla Schema cree un documento en base 
+                                            al contenido del body :)
+          res.redirect('/ruta destino')    // Respond personalizado
+      }
+  })
+
+### 15.2 LEER UN ÚNICO DOCUMENTO
+
+
+* Se configura una variable :id en la ruta para que asi esta pueda tomar su valor y buscar el documento de manera individual
+router.get('/:id', async(req, res) => {
+    const id = req.params.id;
+
+    try {
+        const mascotaDB = await Mascota.findOne({ _id: id }); //la constante mascota espera a que el schema pueda encontrar el valor del elemento id en forma de objeto
+        console.log(mascotaDB);
+
+        res.render('detalle', {
+            mascota: mascotaDB,
+            error: false
+        })
+    } catch (error) {
+        console.log(error);
+        res.render('detalle', {
+            error: true,
+            mensaje: 'No se encuentra el ID seleccionado'
+        })
+    }
+})
+
+
+### 15.3. ELIMINAR DOCUMENTOS
+
+* CONTIENE LA RUTA E INSTRUCCIONES ESPECIFICAS PARA REALIZAR LA TAREA
+
+router.delete('/:id', async(req, res) =>{
+    const id = req.params.id;
+
+    try {
+        const mascotaDB = await Mascota.findByIdAndDelete({_id: id});
+
+        if(mascotaDB){
+            res.json({
+                estado: true,
+                mensaje: 'Eliminado'
+            })
+        }else{
+            res.json({
+                estado: false,
+                mensaje: 'Falló eliminar'
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+* SE CAPTURA EL BTN ELIMINAR PARA PODER ENVIAR EL METODO DELETE POR MEDIO DEL FETCH
+* SOLICITA LA ELIMINACION YVERIFICA EN LA MISMA VENTANA DEL CLIENTE LA CONSULTA AL MODULO PARA VER SI SE REALIZO LA TAREA, NO EJECUTA LA ORDEN DIRECTAMENTE
+    const btnEliminar = document.querySelector('#btnEliminar');
+
+    btnEliminar.addEventListener('click', async() =>{
+        const id = btnEliminar.dataset.id;
+        try {
+            const data = await fetch(`/mascotas/${id}`, {
+                method: 'delete'
+            });
+            const res = await data.json();
+            
+            if(res.estado){
+                alert('Se eliminó con éxito');
+                window.location.href = '/mascotas';
+            }else{
+                console.log(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    })
+
+    * OJITO
+    <button 
+            id="btnEliminar"
+            data-id="<%= mascota.id %>"
+            >
+                Eliminar
+    </button>
+
+
+### 15.4. EDITAR DOCUMENTOS
+
+* MODULO
+
+router.put('/:id', async(req, res) =>{
+    const id = req.params.id;
+    const body = req.body;
+
+    try {
+        const mascotaDB = await Mascota.findByIdAndUpdate(id, body, { useFindAndModify: false });
+        console.log(mascotaDB);
+
+        res.json({
+            estado: true,
+            mensaje: 'Editado'
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            estado: false,
+            mensaje: 'Fallamos'
+        })
+    }
+})
+
+
+    * SE CAPTURA EL FORMULARIO PARA PODER EDITAR UN DOCUMENTO USANDO FETCH CON EL METODO PUT
+
+    const formularioEditar = document.querySelector('#formularioEditar');
+
+    formularioEditar.addEventListener('submit', async(e) =>{
+        e.preventDefault();
+
+        //las 2 maneras de capturar el valor de un elemento
+        const nombre = formularioEditar.elements['nombre'].value;
+        const descripcion = document.querySelector('#descripcionInput').value;
+        const id = formularioEditar.dataset.id;
+
+        try {
+            const data = await fetch(`/mascotas/${id}`, {
+                method: 'put',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({nombre, descripcion})
+            })
+            const res = await data.json();
+            if(res.estado){
+                alert('editado con éxito');
+                window.location.href = '/mascotas';
+            }else{
+                console.log(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    })
+
+* OJITO
+  <form id="formularioEditar" data-id="<%= mascota.id %>">

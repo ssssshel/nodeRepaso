@@ -1,10 +1,16 @@
 <%- include("templates/header", {tituloWeb: 'Página de mascotas'}) %>
 <body>
     <div class="container">
+
+        <h1>CRUD MONGODB</h1>
+
+        <a href="/mascotas/crear">
+            <button>Crear nueva mascota</button>
+        </a>
+
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>NOMBRE</th>
                     <th>DESCRIPCION</th>
                     <th>ACCIÓN</th>
@@ -14,10 +20,9 @@
                 <% if (arrayMascotasDB.length > 0) { %>
                     <% arrayMascotasDB.forEach(mascota => { %>
                         <tr>
-                            <th><%= mascota.id %> </th>
                             <td><%= mascota.nombre %> </td>
                             <td><%= mascota.descripcion %> </td>
-                            <td>dsfa</td>
+                            <td><a href="/mascotas/<%= mascota.id %>"><button>Editar</button></a></td>
                         </tr>
                     <% }) %>
                 <% } %>

@@ -1,5 +1,15 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
+//configuracion de body-parser
+// parse para aplicaciones form
+app.use(bodyParser.urlencoded({ extended: false}));
+// parse para aplicaciones json
+app.use(bodyParser.json()); 
+
+
+//configuracion de dotenv para crear VE
 require('dotenv').config();
 
 //conexión a base de datos
